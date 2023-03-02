@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>To do list</title>
+		<style>
+			.remove {
+				margin-left: 30px;
+			}
+			
+			.everything {
+				text-align: center;
+			}
+			
+			ul  {
+				padding-left: 0;
+			}
+			ul li {
+				list-style-position: inside;
+				padding-bottom: 20px;
+				font-size: 24px;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div class="everything">
+			<h1>ToDo List</h1>
+			<ul id="list">
+			</ul>
+			<input autofocus type="text" id="input">
+			<button id="add">Add</button>
+		</div>
+	</body>
+	<script>
+	
+		const items = {...localStorage};
+		if(items != null) {
+			for(i = 0; i < localStorage.length; i++) {
+				const list_item = document.createElement('li');
+				list_item.className = 'todo';
+				list_item.innerHTML = localStorage.getItem(`todo ${i}`);
+				document.querySelector('#list').append(list_item);
+			}
+		}
+		
+		document.querySelector('#add').addEventListener('click', () => add_todo());
+		
+		function add_todo() {
+			let todo = document.querySelector('#input').value;
+			const list_item = document.createElement('li');
+			list_item.className = 'todo';
+			list_item.innerHTML = todo + '<button class="remove">Remove</button>';
+			document.querySelector('#list').append(list_item);
+			document.querySelector('#input').value = '';
+			save();
+		}
+		
+		document.addEventListener('click', event => {
+			const element = event.target
+			
+			if(element.className === 'remove') {
+				let parent = element.parentElement;
+				parent.remove();
+				save();
+			}
+		})
+		
+		function save() {
+			localStorage.clear();
+			let items = document.querySelector('#list').getElementsByTagName('li');
+			for(i = 0; i < items.length; i++) {
+				localStorage.setItem(`todo ${i}`, items[i].innerHTML);
+			}
+		}
+	</script>
+</html>
